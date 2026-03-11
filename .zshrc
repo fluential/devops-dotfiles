@@ -2,29 +2,74 @@
 # Executes commands at the start of an interactive session.
 #
 
-# Source Prezto.
+# --- Prezto ---
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+# --- PATH ---
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.local/bin/claude:$PATH"
+export PATH="${PATH}:${HOME}/.krew/bin"
 
-# Local ~/.bin path
-export PATH="$HOME/.bin:$PATH"
+# --- Tool init ---
+export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# Cached pyenv init — regenerate: pyenv init - > ~/.pyenv/init-cache.zsh
+if [[ -s "$PYENV_ROOT/init-cache.zsh" ]]; then
+  source "$PYENV_ROOT/init-cache.zsh"
+else
+  eval "$(pyenv init -)"
+fi
+
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+source "/opt/homebrew/share/google-cloud-sdk/path.zsh.inc" || true
+source "/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc" || true
+export CLOUDSDK_PYTHON_SITEPACKAGES=1
+export CLOUDSDK_PYTHON=/opt/homebrew/opt/python3/bin/python3
+
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/vault vault
 
+# --- History (Atuin primary, zsh native as fallback) ---
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=50000
+export SAVEHIST=50000
+setopt EXTENDED_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+eval "$(atuin init zsh)"
+
+# --- SSH ---
+ssh-add -l &>/dev/null || ssh-add --apple-load-keychain 2>/dev/null
+
+# --- Secrets ---
+[[ -f "$HOME/.secrets" ]] && source "$HOME/.secrets"
+
+# --- Aliases ---
+alias k=kubectl
+alias vcat=/bin/cat
+alias cat=/opt/homebrew/bin/bat
+alias vlc='open -a vlc'
+alias ffmpeg='docker run -i --rm -u $UID:$GROUPS -v "$PWD:$PWD" -w "$PWD" mwader/static-ffmpeg:5.1.2'
+alias pull_all="find . -type d -name .git -print -exec git --git-dir={} --work-tree=$PWD/{}/.. pull \;"
+alias jlp-env='git config --local user.name "Michael Czerwinski";git config --local user.email "michael.czerwinski@johnlewis.co.uk";export GIT_SSH_COMMAND="ssh -i /Users/mcz/.ssh/id_rsa.jlp -o IdentitiesOnly=yes"'
+alias mcz-env='git config --global user.name fluential;git config --global user.email fluential@users.noreply.github.com'
+
+#source /Users/mcz/dev/JLP/gittmr/gitt-alias.sh
+
 typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[cursor]=underline
 
-#### GIT ALIASES
-# > cat ~/.gitconfig
-# # This is Git's per-user configuration file.
-# [alias]
-#   frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | cut -d ' ' -f1)^ ; }; f"
-#   sw = !git checkout $(git branch -a --format '%(refname:short)' | sed 's~origin/~~' | sort | uniq | fzf)
-
+# --- Git log with fzf ---
 gli() {
   local filter
   if [ -n $@ ] && [ -f $@ ]; then
@@ -50,7 +95,6 @@ _gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
 _viewGitLogLine="$_gitLogLineToHash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy'"
 _viewGitLogLineUnfancy="$_gitLogLineToHash | xargs -I % sh -c 'git show %'"
 
-# gls - git commit browser with previews and vim integration
 gly() {
     glNoGraph |
         fzf --no-sort --reverse --tiebreak=index --no-multi \
@@ -60,3 +104,6 @@ gly() {
                 --bind "alt-v:execute:$_viewGitLogLineUnfancy | vim -" \
                 --bind "alt-y:execute:$_gitLogLineToHash | xclip"
 }
+
+# --- GPG ---
+export GPG_TTY=$(tty)

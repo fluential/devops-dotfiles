@@ -1,0 +1,9 @@
+.secrets
+.env
+*.pem
+*.key
+.DS_Store
+.zsh_history*
+.vim/.netrwhist
+.vim/bundle/*/
+!.vim/bundle/Vundle.vim/

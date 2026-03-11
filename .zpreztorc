@@ -41,7 +41,8 @@ zstyle ':prezto:load' pmodule \
   'git' \
   'syntax-highlighting' \
   'ssh' \
-  'prompt'
+  'prompt' \
+  'fzf'
 
 #
 # Autosuggestions
@@ -242,3 +243,6 @@ zstyle ':prezto:module:fzf' height '30%'
 zstyle ':prezto:module:fzf' tmux 'yes'
 
 zstyle ':prezto:module:fzf' colorscheme 'Solarized Dark'
+
+# Hardcode fzf path to skip slow OS-probing during plugin init
+zstyle ':prezto:module:fzf' fzf-base '/opt/homebrew/opt/fzf'

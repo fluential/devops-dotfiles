@@ -1,82 +1,74 @@
+set nocompatible
+filetype off
 
-set nocompatible              " required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
+" --- Vundle ---
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-" Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'scrooloose/nerdtree'
-Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'hashivim/vim-terraform'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'pearofducks/ansible-vim'
-set rtp+=~/.fzf
+set rtp+=/opt/homebrew/opt/fzf
 Plugin 'junegunn/fzf.vim'
-" add all your plugins here (note older versions of Vundle
-" used Bundle instead of Plugin)
 
-" ...
+call vundle#end()
+filetype plugin indent on
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-
+" --- Search (fzf + rg) ---
 if executable('rg')
   set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-  let g:ctrlp_use_caching = 0
 endif
 
-" filetype on
-" filetype plugin indent on
- set ttyfast
- syntax on
- set autoindent
- set encoding=utf-8
-" autocmd filetype python setlocal ts=4 sw=4 sts=4 et
- set number
- set ignorecase
- set list
- set listchars=tab:»\ ,trail:·
- set history=10000
- set backupdir=/tmp
-" set paste
- set smartindent
- set shiftwidth=2
- set backspace=2
- set smarttab
- set hlsearch
-" set winwidth=79
-" set foldmethod=indent
- set incsearch
- set showcmd
-" set foldlevel=1000
-" set nolinebreak
-" set scrolloff=3
- set tabstop=4
- set softtabstop=0
-" autocmd BufRead * set tw=9999
-" setlocal textwidth=999
-:colorscheme desert
- set expandtab
- set backspace=indent,eol,start
-" set scrolloff=3
-set statusline=%f%m%r%h%w\ [%Y\ %{&ff}]\ [%l/%L\ (%p%%)]
+" --- General ---
+set ttyfast
+syntax on
+set encoding=utf-8
+set number
+set ignorecase
+set smartcase
+set list
+set listchars=tab:»\ ,trail:·
+set history=10000
+set backupdir=/tmp
+set autoindent
+set smartindent
+set shiftwidth=2
+set tabstop=4
+set softtabstop=0
+set expandtab
+set smarttab
+set backspace=indent,eol,start
+set hlsearch
+set incsearch
+set showcmd
 set laststatus=2
-" set colorcolumn=79
+set statusline=%f%m%r%h%w\ [%Y\ %{&ff}]\ [%l/%L\ (%p%%)]
+colorscheme desert
+
+" --- Filetype overrides ---
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=120 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
+
+au BufNewFile,BufRead *.js,*.html,*.css,*.sh
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2
+
+" --- Keys ---
 let mapleader = "\<Space>"
 vnoremap . :normal .<CR>
-" Install via https://github.com/powerline/fonts
-:let g:airline_powerline_fonts = 1
-:let g:airline_theme='bubblegum'
 
+" --- Airline ---
+let g:airline_powerline_fonts = 1
+let g:airline_theme='bubblegum'
