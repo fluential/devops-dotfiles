@@ -7,3 +7,5 @@
 .vim/.netrwhist
 .vim/bundle/*/
 !.vim/bundle/Vundle.vim/
+claude/mcp.json
+claude/.mcp.json
