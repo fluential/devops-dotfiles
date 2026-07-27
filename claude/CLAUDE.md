@@ -41,7 +41,7 @@ These are NOT optional. Match the trigger to apply the workflow. The "Typical Pi
 
 **`superpowers:requesting-code-review`** — when completing a feature or significant change, before commit/PR. Use `code-review:code-review` for PR-level; `pr-review-toolkit:review-pr` for multi-agent.
 
-**`simplify` skill** — after a feature passes tests, before final commit. Cleans up complexity from iterative dev.
+**`code-simplifier:code-simplifier` agent** — after a feature passes tests, before final commit. Cleans up complexity from iterative dev.
 
 **Gemini Red-Team Security Review** — for security-sensitive code
 - Triggers (path-based): `functions/_middleware.js`, `turnstile-loader.js`, `wasm-bridge.js`, `model-runtime.*`, `worker/src/*`, any crypto/auth/session path
@@ -71,6 +71,7 @@ SHIP:    commit → deploy (per project)
 You have MCP tools available. Use them proactively — don't default to writing code or descriptive text when a tool fits.
 
 **Gemini MCP (`mcp__gemini__*`):**
+- **ALWAYS use `model: "gemini-3.1-pro-preview"` for ALL Gemini tool calls.** Never use default or other models.
 - Current/real-time info on libraries, APIs, bugs → `gemini_chat` (grounded, thinking: low)
 - Image / logo / mockup → `generate_image` (DO NOT write code to render an image)
 - Video / animation → `generate_video`
