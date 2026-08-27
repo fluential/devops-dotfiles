@@ -1,5 +1,8 @@
 {
-  "model": "claude-opus-5[1m]",
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
   "enableWorkflows": true,
   "statusLine": {
     "type": "command",
@@ -52,8 +55,5 @@
   "autoCompactEnabled": false,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "defaultView": "transcript",
-  "permissions": {
-    "defaultMode": "auto"
-  }
+  "defaultView": "transcript"
 }

@@ -37,29 +37,43 @@ autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/vault vault
 
 # --- History (Atuin primary, zsh native as fallback) ---
-export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=50000
-export SAVEHIST=50000
+#export HISTFILE="$HOME/.zsh_history"
+#export HISTSIZE=50000
+#export SAVEHIST=50000
 setopt EXTENDED_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
+
+export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
+
+# Redefine the custom wrapper using 'zle' to properly call Atuin
+_atuin_search_no_execute() {
+  # Call the internal Atuin search widget through the Zsh Line Editor
+  zle _atuin_search_widget
+
+  # Refresh the command line display neatly when Atuin closes
+  zle redisplay
+}
+
+# Register your wrapper function as a valid Zsh widget
+zle -N _atuin_search_no_execute
+
+# Bind Ctrl+R to your custom wrapper
+bindkey '^R' _atuin_search_no_execute
 
 # --- SSH ---
 ssh-add -l &>/dev/null || ssh-add --apple-load-keychain 2>/dev/null
-
-# --- Secrets ---
-[[ -f "$HOME/.secrets" ]] && source "$HOME/.secrets"
 
 # --- Aliases ---
 alias k=kubectl
 alias vcat=/bin/cat
 alias cat=/opt/homebrew/bin/bat
 alias vlc='open -a vlc'
-alias ffmpeg='docker run -i --rm -u $UID:$GROUPS -v "$PWD:$PWD" -w "$PWD" mwader/static-ffmpeg:5.1.2'
+#alias ffmpeg='docker run -i --rm -u $UID:$GROUPS -v "$PWD:$PWD" -w "$PWD" mwader/static-ffmpeg:5.1.2'
 alias pull_all="find . -type d -name .git -print -exec git --git-dir={} --work-tree=$PWD/{}/.. pull \;"
 alias jlp-env='git config --local user.name "Michael Czerwinski";git config --local user.email "michael.czerwinski@johnlewis.co.uk";export GIT_SSH_COMMAND="ssh -i /Users/mcz/.ssh/id_rsa.jlp -o IdentitiesOnly=yes"'
 alias mcz-env='git config --global user.name fluential;git config --global user.email fluential@users.noreply.github.com'
@@ -107,3 +121,6 @@ gly() {
 
 # --- GPG ---
 export GPG_TTY=$(tty)
+
+# SOPS age key for encrypted secrets
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
