@@ -124,3 +124,4 @@ export GPG_TTY=$(tty)
 
 # SOPS age key for encrypted secrets
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+export PATH="/opt/homebrew/opt/ffmpeg-full/bin:$PATH"
