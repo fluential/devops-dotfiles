@@ -2,7 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5-1[1m]",
+  "model": "opus[1m]",
   "skillOverrides": {
     "reflect": "off",
     "preflight": "off",
@@ -62,7 +62,6 @@
       }
     }
   },
-  "tui": "default",
   "spinnerTipsEnabled": false,
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -73,6 +72,7 @@
   },
   "advisorModel": "fable",
   "autoUpdatesChannel": "latest",
+  "tui": "default",
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "verbose": true,

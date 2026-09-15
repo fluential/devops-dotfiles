@@ -16,12 +16,12 @@ export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-# Cached pyenv init — regenerate: pyenv init - > ~/.pyenv/init-cache.zsh
-if [[ -s "$PYENV_ROOT/init-cache.zsh" ]]; then
-  source "$PYENV_ROOT/init-cache.zsh"
-else
-  eval "$(pyenv init -)"
-fi
+## Cached pyenv init — regenerate: pyenv init - > ~/.pyenv/init-cache.zsh
+#if [[ -s "$PYENV_ROOT/init-cache.zsh" ]]; then
+#  source "$PYENV_ROOT/init-cache.zsh"
+#else
+#  eval "$(pyenv init -)"
+#fi
 
 eval "$(fnm env --use-on-cd --shell zsh)"
 
